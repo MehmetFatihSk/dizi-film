@@ -1,0 +1,1 @@
+Kullanıcının gönderdiği Avatar posteri referansı. Bu dosya geçicidir, Flutter uygulamasında kullanılmayacaktır. 
