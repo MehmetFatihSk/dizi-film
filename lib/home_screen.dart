@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'movie_detail_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final String username;
@@ -167,14 +168,14 @@ class HomeScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return Padding(
                               padding: const EdgeInsets.only(right: 10),
-                              child: _buildMovieCard(movieImages[index % movieImages.length]),
+                              child: _buildMovieCard(context, movieImages[index % movieImages.length]),
                             );
                           },
                         ),
                       ),
-                      
+
                       const SizedBox(height: 25),
-                      
+
                       // Önerilen filmler başlığı ve butonları
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,9 +203,9 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 15),
-                      
+
                       // Önerilen filmler slaytı - Karışık sırayla film görselleri
                       SizedBox(
                         height: 150,
@@ -216,12 +217,12 @@ class HomeScreen extends StatelessWidget {
                             final reversedIndex = movieImages.length - 1 - index;
                             return Padding(
                               padding: const EdgeInsets.only(right: 10),
-                              child: _buildMovieCard(movieImages[reversedIndex % movieImages.length]),
+                              child: _buildMovieCard(context, movieImages[reversedIndex % movieImages.length]),
                             );
                           },
                         ),
                       ),
-                      
+
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -254,95 +255,117 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMovieCard(String imagePath) {
-    return Container(
-      width: 120,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover,
+  // Simple map for movie descriptions
+  final Map<String, String> movieDescriptions = const {
+    'assets/images/movies/a.jpg': 'This is a placeholder description for movie A. It is a fictional movie and this text is just to demonstrate how descriptions will appear on the detail page. Replace with actual movie details and a compelling summary of the plot and characters.',
+    'assets/images/movies/fish.jpg': 'Finding Dory is a 2016 American computer-animated adventure film produced by Pixar Animation Studios and released by Walt Disney Pictures. It is the sequel to Finding Nemo (2003). The film features the voices of Ellen DeGeneres and Albert Brooks, reprising their roles from the first film, and also stars Ed O\'Neill, Kaitlin Olson, Ty Burrell, Diane Keaton, and Eugene Levy. The film focuses on the amnesiac fish Dory, who journeys to be reunited with her parents.',
+    'assets/images/movies/lion.jpg': 'This is a placeholder description for the lion movie. It is a fictional movie and this text is just to demonstrate how descriptions will appear on the detail page. Replace with actual movie details and a compelling summary of the plot and characters.',
+    'assets/images/movies/s.jpg': 'This is a placeholder description for movie S. It is a fictional movie and this text is just to demonstrate how descriptions will appear on the detail page. Replace with actual movie details and a compelling summary of the plot and characters.',
+    'assets/images/movies/shark.jpg': 'This is a placeholder description for the shark movie. It is a fictional movie and this text is just to demonstrate how descriptions will appear on the detail page. Replace with actual movie details and a compelling summary of the plot and characters.',
+  };
+
+  Widget _buildMovieCard(BuildContext context, String imagePath) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MovieDetailScreen(
+              imagePath: imagePath,
+              description: movieDescriptions[imagePath] ?? 'No description available.',
+            ),
+          ),
+        );
+      },
+      child: Container(
+        width: 120,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          image: DecorationImage(
+            image: AssetImage(imagePath),
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
-      child: Stack(
-        children: [
-          // Film ismi ve bilgileri için koyu gradient
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 60,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
+        child: Stack(
+          children: [
+            // Film ismi ve bilgileri için koyu gradient
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 60,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.7),
+                    ],
+                  ),
                 ),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.7),
+              ),
+            ),
+
+            // Oynat butonu
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 5,
+                      spreadRadius: 0,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.play_arrow,
+                  color: Colors.black,
+                  size: 20,
+                ),
+              ),
+            ),
+
+            // İlerleme durumu (sadece "Continue Watching" filmlerinde)
+            Positioned(
+              bottom: 0,
+              left: 10,
+              right: 10,
+              child: Container(
+                height: 3,
+                margin: const EdgeInsets.only(bottom: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  color: Colors.grey[700],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 70, // Random ilerleme
+                      height: 3,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                        color: const Color(0xFFE0CB0C),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
-          ),
-          
-          // Oynat butonu
-          Positioned(
-            bottom: 10,
-            right: 10,
-            child: Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 5,
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.play_arrow,
-                color: Colors.black,
-                size: 20,
-              ),
-            ),
-          ),
-          
-          // İlerleme durumu (sadece "Continue Watching" filmlerinde)
-          Positioned(
-            bottom: 0,
-            left: 10,
-            right: 10,
-            child: Container(
-              height: 3,
-              margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(2),
-                color: Colors.grey[700],
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 70, // Random ilerleme
-                    height: 3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(2),
-                      color: const Color(0xFFE0CB0C),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -375,4 +398,4 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-} 
+}

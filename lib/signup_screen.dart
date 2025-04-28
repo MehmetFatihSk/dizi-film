@@ -1,40 +1,17 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
-import 'welcome_screen.dart';
-import 'forgot_password_screen.dart';
+import 'home_screen.dart'; // Assuming HomeScreen is the destination after signup
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Movie App',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFE94834)),
-        useMaterial3: true,
-        fontFamily: 'Inter',
-      ),
-      home: const WelcomeScreen(),
-    );
-  }
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
-
-  @override
-  State<SignInScreen> createState() => _SignInScreenState();
-}
-
-class _SignInScreenState extends State<SignInScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   String? _errorMessage;
   bool _isLoading = false;
 
@@ -42,37 +19,39 @@ class _SignInScreenState extends State<SignInScreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
-  
-  // Kullanıcı girişini doğrulama metodu
-  void _validateAndLogin() {
+
+  // Kullanıcı kaydını doğrulama metodu
+  void _validateAndSignUp() {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
-    
-    // Email alanı username olarak kullanılacak
-    final username = _emailController.text.trim();
+
+    final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
-    
+    final confirmPassword = _confirmPasswordController.text.trim();
+
+    if (password != confirmPassword) {
+      setState(() {
+        _errorMessage = "Şifreler eşleşmiyor!";
+        _isLoading = false;
+      });
+      return;
+    }
+
     // Dummy gecikme ekliyoruz
     Future.delayed(const Duration(seconds: 1), () {
-      if (username == "fatih123" && password == "12345") {
-        // Başarılı giriş
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomeScreen(username: username),
-          ),
-        );
-      } else {
-        // Başarısız giriş
-        setState(() {
-          _errorMessage = "Geçersiz kullanıcı adı veya şifre!";
-          _isLoading = false;
-        });
-      }
+      // Burada gerçek kayıt işlemleri yapılacak
+      // Şimdilik başarılı kabul edip HomeScreen'e yönlendiriyoruz
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(username: email), // Using email as username for now
+        ),
+      );
     });
   }
 
@@ -88,10 +67,10 @@ class _SignInScreenState extends State<SignInScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 60),
-                
-                // Sign In başlığı
+
+                // Sign Up başlığı
                 const Text(
-                  'Sign In',
+                  'Sign Up',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 32,
@@ -99,9 +78,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     fontFamily: 'Inter',
                   ),
                 ),
-                
+
                 const SizedBox(height: 50),
-                
+
                 // Email alanı
                 const Text(
                   'Email',
@@ -112,9 +91,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     fontFamily: 'Inter',
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Email input alanı
                 Container(
                   decoration: BoxDecoration(
@@ -127,14 +106,14 @@ class _SignInScreenState extends State<SignInScreen> {
                     decoration: const InputDecoration(
                       contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                       border: InputBorder.none,
-                      hintText: 'Kullanıcı adı: fatih123',
+                      hintText: 'Email adresinizi girin',
                       hintStyle: TextStyle(color: Colors.white54),
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 30),
-                
+
                 // Şifre alanı
                 const Text(
                   'Password',
@@ -145,9 +124,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     fontFamily: 'Inter',
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Şifre input alanı
                 Container(
                   decoration: BoxDecoration(
@@ -161,12 +140,46 @@ class _SignInScreenState extends State<SignInScreen> {
                     decoration: const InputDecoration(
                       contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                       border: InputBorder.none,
-                      hintText: 'Şifre: 12345',
+                      hintText: 'Şifrenizi girin',
                       hintStyle: TextStyle(color: Colors.white54),
                     ),
                   ),
                 ),
-                
+
+                const SizedBox(height: 30),
+
+                // Şifre Tekrar alanı
+                const Text(
+                  'Confirm Password',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Şifre Tekrar input alanı
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(60),
+                    border: Border.all(color: const Color(0xFFE0CB0C), width: 2),
+                  ),
+                  child: TextField(
+                    controller: _confirmPasswordController,
+                    obscureText: true,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      border: InputBorder.none,
+                      hintText: 'Şifrenizi tekrar girin',
+                      hintStyle: TextStyle(color: Colors.white54),
+                    ),
+                  ),
+                ),
+
                 // Hata mesajı
                 if (_errorMessage != null)
                   Padding(
@@ -179,12 +192,12 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                   ),
-                
+
                 const SizedBox(height: 40),
-                
-                // Sign In butonu
+
+                // Sign Up butonu
                 GestureDetector(
-                  onTap: _isLoading ? null : _validateAndLogin,
+                  onTap: _isLoading ? null : _validateAndSignUp,
                   child: Container(
                     width: double.infinity,
                     height: 56,
@@ -194,53 +207,28 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     child: Center(
                       child: _isLoading
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : const Text(
-                          'Sign In',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Inter',
-                          ),
+                          ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
                         ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Forgot Password butonu
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ForgotPasswordScreen(),
+                      )
+                          : const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Inter',
                         ),
-                      );
-                    },
-                    child: const Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
-                        fontFamily: 'Inter',
                       ),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 40),
 
                 // OR
                 const Center(
@@ -253,13 +241,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 40),
-                
+
                 // Continue with Google butonu
                 GestureDetector(
                   onTap: () {
-                    // Google ile giriş işlemleri burada yapılacak
+                    // Google ile kayıt işlemleri burada yapılacak
                   },
                   child: Container(
                     width: double.infinity,
