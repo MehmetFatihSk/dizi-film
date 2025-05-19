@@ -1,10 +1,10 @@
 from flask import Flask, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_pymongo import FlaskPyMongo
+from flask_pymongo import PyMongo
 
 app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://localhost:27017/mydatabase" # Example MongoDB connection URI
-mongo = FlaskPyMongo(app)
+mongo = PyMongo(app)
 
 # Import models here to avoid circular imports (Note: These models are for SQLAlchemy and need to be rewritten for MongoDB)
 # from models import User, Movie

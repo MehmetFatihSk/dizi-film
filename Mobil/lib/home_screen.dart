@@ -119,19 +119,20 @@ class _HomeScreenState extends State<HomeScreen> { // State class
                         ),
                       ),
 
-                      const SizedBox(height: 25),
+                      const SizedBox(height: 30),
 
                       // Film arama başlığı
                       const Text(
-                        "Find You Movies",
+                        "Find Your Movies",
                         style: TextStyle(
-                          fontSize: 9,
+                          fontSize: 16,
                           fontFamily: 'Inter',
+                          fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
 
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 10),
 
                       // Arama kutusu
                       Container(
@@ -170,6 +171,7 @@ class _HomeScreenState extends State<HomeScreen> { // State class
                             style: TextStyle(
                               fontSize: 18,
                               fontFamily: 'Inter',
+                              fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
@@ -189,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> { // State class
                         ],
                       ),
 
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 10),
 
                       // Devam eden filmler slaytı
                       SizedBox(
@@ -206,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> { // State class
                         ),
                       ),
 
-                      const SizedBox(height: 25),
+                      const SizedBox(height: 30),
 
                       // Önerilen filmler başlığı ve butonları
                       Row(
@@ -217,6 +219,7 @@ class _HomeScreenState extends State<HomeScreen> { // State class
                             style: TextStyle(
                               fontSize: 18,
                               fontFamily: 'Inter',
+                              fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
@@ -236,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> { // State class
                         ],
                       ),
 
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 10),
 
                       // Önerilen filmler slaytı - Karışık sırayla film görselleri
                       SizedBox(

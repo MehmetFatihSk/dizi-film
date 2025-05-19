@@ -35,8 +35,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      body: const Center(
-        child: Text('Profile Screen'),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const CircleAvatar(
+              radius: 50,
+              backgroundImage: AssetImage('assets/images/avatar.png'), // Placeholder avatar
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'User Name', // Placeholder username
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 24),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                // Navigate to settings screen
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.notifications),
+              title: Text('Notifications'),
+              onTap: () {
+                // Navigate to notifications settings
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.privacy_tip),
+              title: Text('Privacy'),
+              onTap: () {
+                // Navigate to privacy settings
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
